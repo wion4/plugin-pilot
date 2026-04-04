@@ -85,11 +85,14 @@ claude plugins marketplace update
 
 ## Reload Plugins
 
-After installing or uninstalling, reload to activate changes:
+After installing or uninstalling, reload to activate changes.
+
+**There is NO bash equivalent.** You MUST ask the user to run:
 ```
 /reload-plugins
 ```
-Note: `/reload-plugins` is a slash command only — no bash equivalent.
+Use AskUserQuestion: "Плагины установлены. Выполните /reload-plugins для активации." with options ["Готово", "Позже"].
+Do NOT silently skip this step — plugins won't work until reloaded.
 
 ## Listing Installed Plugins
 

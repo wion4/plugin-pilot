@@ -103,10 +103,10 @@ When a relevant plugin is identified:
    - ❌ `python3 catalog_manager.py install ...` — the script has no install command
    - ❌ `claude plugins install github:owner/repo` — github: prefix not supported
 
-3. Reload plugins to activate:
-   ```
-   /reload-plugins
-   ```
+3. Reload plugins — **no bash equivalent exists**, MUST ask the user via AskUserQuestion:
+   - Question: "Плагины установлены. Выполните `/reload-plugins` для активации."
+   - Options: ["Готово", "Позже"]
+   - **Do NOT skip this step.** Plugins won't activate without reload.
 4. Record usage (this IS a python script — correct):
    ```bash
    python3 ${CLAUDE_PLUGIN_ROOT}/scripts/catalog_manager.py record_usage {name}
@@ -134,7 +134,7 @@ If confirmed, uninstall via Bash tool:
 ```bash
 claude plugins uninstall {plugin-name}@{marketplace-name}
 ```
-Then reload: `/reload-plugins`
+Then ask the user to run `/reload-plugins` (no bash equivalent — must ask via AskUserQuestion).
 
 ### 5. Catalog Synchronization
 
@@ -297,7 +297,7 @@ GitHub repos cannot be installed directly. Two-step process (via Bash tool):
 claude plugins marketplace add owner/repo-name
 claude plugins install plugin-name@marketplace-name
 ```
-Then: `/reload-plugins`
+Then ask the user to run `/reload-plugins` via AskUserQuestion.
 
 **NEVER use `github:owner/repo`** — this syntax does not exist.
 
