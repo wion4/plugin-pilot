@@ -17,12 +17,17 @@ Manually trigger Plugin Pilot actions.
 - **`verify <owner/repo>`**: Check if a GitHub repo is a valid Claude Code plugin, show trust score and license info
 - **`reset`**: Delete all Plugin Pilot local data (usage stats, catalog cache, consent). GDPR right to deletion.
 
+## Language
+
+Detect the user's system language from `$LANG` (run: `echo $LANG`) and conduct ALL output in that language (e.g. `ru_RU` = Russian, `en_US` = English, `de_DE` = German). This applies to table headers, recommendations, questions, and all other text. Pass the detected language to the plugin-resolver agent in the prompt.
+
 ## Execution
 
-1. First check consent: `python3 ${CLAUDE_PLUGIN_ROOT}/scripts/consent_manager.py check privacy_policy`. If not accepted, run onboarding first.
-2. Load the plugin-pilot skill for full context
-3. Use the plugin-resolver agent for analysis
-4. Present results and act on user choices
+1. Detect system language: `echo $LANG`
+2. Check consent: `python3 ${CLAUDE_PLUGIN_ROOT}/scripts/consent_manager.py check privacy_policy`. If not accepted, run onboarding first.
+3. Load the plugin-pilot skill for full context
+4. Use the plugin-resolver agent for analysis — **include the detected language in the agent prompt** so it also outputs in the correct language
+5. Present results and act on user choices
 
 ## Reset Flow
 

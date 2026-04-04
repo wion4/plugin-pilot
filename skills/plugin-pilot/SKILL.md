@@ -8,6 +8,10 @@ version: 0.1.0
 
 Automatically detect, install, update, and clean up Claude Code plugins and skills based on the user's current task, project context, and usage patterns.
 
+## Language Rule
+
+**ALL output must match the user's system language.** Detect via `echo $LANG` (e.g. `ru_RU` = Russian, `en_US` = English). This applies to: table headers, recommendations, questions, AskUserQuestion options, plan sections, warnings — everything user-facing. When launching sub-agents (plugin-resolver, stack-scout), pass the language in the prompt.
+
 ## Core Responsibilities
 
 ### 0. Plan Mode Integration

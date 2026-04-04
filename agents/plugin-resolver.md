@@ -32,6 +32,10 @@ color: green
 
 Analyze the current project context and user's task to determine which plugins and skills are needed.
 
+## Language
+
+**IMPORTANT:** If the calling agent specifies a language (e.g. "respond in Russian"), ALL output must be in that language — table headers, recommendations, explanations, everything. Default to English if no language is specified.
+
 ## Analysis Steps
 
 ### 1. Scan Project Context
