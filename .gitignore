@@ -1,0 +1,6 @@
+# User data
+data/*.json
+
+# Python
+__pycache__/
+*.pyc

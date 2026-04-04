@@ -1,0 +1,10 @@
+{
+  "name": "plugin-pilot",
+  "version": "0.1.0",
+  "description": "AI-driven plugin lifecycle manager — auto-detects, installs, updates, and cleans up plugins and skills based on your current task",
+  "author": {
+    "name": "wion4",
+    "email": "wion4@vk.com"
+  },
+  "keywords": ["plugin-manager", "auto-install", "smart", "lifecycle", "cleanup"]
+}

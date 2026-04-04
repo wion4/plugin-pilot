@@ -1,0 +1,26 @@
+{
+  "hooks": {
+    "UserPromptSubmit": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "prompt",
+            "prompt": "Plugin Pilot is active. Briefly analyze the user's message for task context. If the task clearly involves a technology, framework, or workflow that has a matching plugin NOT currently installed, suggest it concisely. Check installed plugins first: python3 ${CLAUDE_PLUGIN_ROOT}/scripts/catalog_manager.py installed. Do NOT suggest plugins for every message — only when there is a strong, obvious match. Max 1 suggestion per session unless user explicitly asks for more. If nothing is clearly needed, do nothing silently."
+          }
+        ]
+      }
+    ],
+    "SessionStart": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "prompt",
+            "prompt": "Plugin Pilot: Check if catalog needs refresh: python3 ${CLAUDE_PLUGIN_ROOT}/scripts/catalog_manager.py refresh_check. If stale, rebuild silently: python3 ${CLAUDE_PLUGIN_ROOT}/scripts/catalog_manager.py build. Then scan the current working directory for project context (config files, dominant languages) and cross-reference with installed plugins. If there are obvious missing plugins for this project, mention them briefly at the start. Keep it to one line unless user asks for details."
+          }
+        ]
+      }
+    ]
+  }
+}
