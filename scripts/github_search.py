@@ -92,7 +92,12 @@ def search_plugins(query: str = "", token: str = "") -> list[dict]:
                     "language": repo.get("language", ""),
                     "topics": repo.get("topics", []),
                     "owner": repo.get("owner", {}).get("login", ""),
-                    "install_cmd": f"github:{full_name}",
+                    "install_cmd": f"/plugin marketplace add {full_name} && /plugin install <name>@{full_name}",
+                    "install_steps": [
+                        f"/plugin marketplace add {full_name}",
+                        f"/plugin install <plugin-name>@{full_name}",
+                        "/reload-plugins",
+                    ],
                     "source": "github_community",
                     "license": repo.get("license", {}).get("spdx_id", "") if repo.get("license") else "",
                 })
@@ -141,7 +146,12 @@ def search_by_task(task_keywords: list[str], token: str = "") -> list[dict]:
                     "updated_at": repo.get("updated_at", ""),
                     "topics": repo.get("topics", []),
                     "owner": repo.get("owner", {}).get("login", ""),
-                    "install_cmd": f"github:{full_name}",
+                    "install_cmd": f"/plugin marketplace add {full_name} && /plugin install <name>@{full_name}",
+                    "install_steps": [
+                        f"/plugin marketplace add {full_name}",
+                        f"/plugin install <plugin-name>@{full_name}",
+                        "/reload-plugins",
+                    ],
                     "source": "github_community",
                     "matched_keyword": keyword,
                     "license": repo.get("license", {}).get("spdx_id", "") if repo.get("license") else "",

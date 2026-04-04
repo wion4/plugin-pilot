@@ -182,7 +182,12 @@ def analyze_repo_as_stack(repo_full_name: str, token: str = "") -> dict | None:
                 "total": total_components,
             },
             "mentioned_tools": mentioned_tools,
-            "install_cmd": f"github:{repo_full_name}",
+            "install_cmd": f"/plugin marketplace add {repo_full_name} && /plugin install <name>@{repo_full_name}",
+            "install_steps": [
+                f"/plugin marketplace add {repo_full_name}",
+                f"/plugin install <plugin-name>@{repo_full_name}",
+                "/reload-plugins",
+            ],
         }
 
     except (urllib.error.URLError, json.JSONDecodeError) as e:

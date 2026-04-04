@@ -70,18 +70,31 @@ Only suggest plugins that are NOT already installed.
 
 ### 3. Installation Flow
 
+**CRITICAL: Read `${CLAUDE_PLUGIN_ROOT}/skills/plugin-pilot/references/plugin-commands.md` before any plugin operation.** This file contains the authoritative CLI commands.
+
 When a relevant plugin is identified:
 
 1. **Ask the user** via AskUserQuestion before installing:
    - Question: "Для этой задачи пригодится плагин **{name}** — {description}. Установить?"
    - Options: ["Да, ставь", "Нет, не нужно", "Расскажи подробнее"]
-2. If confirmed, install:
-   ```bash
-   claude /plugin install {install_id}
+2. If confirmed, install depending on source:
+
+   **From official/configured marketplace:**
    ```
+   /plugin install {plugin-name}@{marketplace-name}
+   ```
+
+   **From GitHub community repo (two-step):**
+   ```
+   /plugin marketplace add {owner/repo}
+   /plugin install {plugin-name}@{owner/repo}
+   ```
+
+   **NEVER use:** `claude plugin install`, `claude /plugin install`, or `/plugin install github:owner/repo` — these do NOT work.
+
 3. Reload plugins to activate:
-   ```bash
-   claude /reload-plugins
+   ```
+   /reload-plugins
    ```
 4. Record usage:
    ```bash
@@ -105,6 +118,12 @@ python3 ${CLAUDE_PLUGIN_ROOT}/scripts/catalog_manager.py find_unused 30
 Before removing, always confirm with the user:
 - Question: "Плагин **{name}** не использовался {days} дней. Удалить?"
 - Options: ["Удалить", "Оставить", "Напомни позже"]
+
+If confirmed, uninstall:
+```
+/plugin uninstall {plugin-name}@{marketplace-name}
+/reload-plugins
+```
 
 ### 5. Catalog Synchronization
 
@@ -261,9 +280,15 @@ Check the result:
 
 ### Installation from GitHub
 
-```bash
-/plugin install github:owner/repo-name
+GitHub repos cannot be installed directly. Two-step process:
+
 ```
+/plugin marketplace add owner/repo-name
+/plugin install plugin-name@owner/repo-name
+/reload-plugins
+```
+
+**NEVER use `/plugin install github:owner/repo`** — this syntax does not exist.
 
 ## Unofficial Marketplaces
 
