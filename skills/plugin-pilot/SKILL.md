@@ -1,6 +1,6 @@
 ---
 name: Plugin Pilot
-description: This skill should be used when the user starts a task that could benefit from additional plugins or skills, when they ask to "install plugins", "find plugins", "clean up plugins", "what plugins do I need", "remove unused plugins", or when analyzing the current task context to suggest relevant marketplace plugins and skills. Also activates on "check for new plugins", "update plugin catalog", or "plugin conflicts".
+description: This skill should be used when the user starts a task that could benefit from additional plugins or skills, when they ask to "install plugins", "find plugins", "clean up plugins", "what plugins do I need", "remove unused plugins", when analyzing the current task context to suggest relevant marketplace plugins and skills, when entering plan mode or creating an implementation plan, or when discussing architecture and tooling decisions. Also activates on "check for new plugins", "update plugin catalog", "plugin conflicts", "plan", "design", "architect", or any task planning phase.
 version: 0.1.0
 ---
 
@@ -9,6 +9,38 @@ version: 0.1.0
 Automatically detect, install, update, and clean up Claude Code plugins and skills based on the user's current task, project context, and usage patterns.
 
 ## Core Responsibilities
+
+### 0. Plan Mode Integration
+
+When Claude enters plan mode or creates an implementation plan, Plugin Pilot adds a **Tooling** section to the plan:
+
+```
+## Tooling (Plugin Pilot)
+
+### Required plugins (not installed):
+- **typescript-lsp** — code intelligence for TypeScript [official]
+- **playwright** — E2E browser testing [official]
+
+### Recommended stacks:
+- **Fullstack Web** — frontend-design + typescript-lsp + playwright + context7
+
+### Relevant skills (already available):
+- frontend-design:frontend-design — UI component creation
+
+### Action: Install missing plugins before starting implementation? [Yes / Skip]
+```
+
+This section should appear in every plan where plugins could accelerate the work. Check installed plugins and match against the plan's technologies:
+
+```bash
+python3 ${CLAUDE_PLUGIN_ROOT}/scripts/catalog_manager.py installed
+python3 ${CLAUDE_PLUGIN_ROOT}/scripts/catalog_manager.py query
+cat ${CLAUDE_PLUGIN_ROOT}/skills/plugin-pilot/stacks.json
+```
+
+If the plan involves technologies not covered by official plugins, use the stack-scout agent to search for community options.
+
+**Timing matters:** suggest plugins BEFORE implementation starts, not during. The plan phase is the ideal moment to set up the right tools.
 
 ### 1. Task-Aware Plugin Detection
 
