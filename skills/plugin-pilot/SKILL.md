@@ -74,7 +74,11 @@ Only suggest plugins that are NOT already installed.
 
 ### 3. Installation Flow
 
-**CRITICAL: Read `${CLAUDE_PLUGIN_ROOT}/skills/plugin-pilot/references/plugin-commands.md` before any plugin operation.** This file contains the authoritative CLI commands.
+⚠️ **TWO SEPARATE SYSTEMS — DO NOT CONFUSE:**
+- **Python scripts** (`catalog_manager.py`, `github_search.py`) = for QUERYING catalog, tracking usage, searching GitHub. They CANNOT install/uninstall plugins.
+- **Claude Code CLI commands** (`/plugin install`, `/plugin uninstall`, `/reload-plugins`) = for ACTUAL installation and removal. These are slash commands typed directly, NOT bash commands.
+
+**Reference: `${CLAUDE_PLUGIN_ROOT}/skills/plugin-pilot/references/plugin-commands.md`**
 
 When a relevant plugin is identified:
 
@@ -94,13 +98,17 @@ When a relevant plugin is identified:
    /plugin install {plugin-name}@{owner/repo}
    ```
 
-   **NEVER use:** `claude plugin install`, `claude /plugin install`, or `/plugin install github:owner/repo` — these do NOT work.
+   **NEVER use any of these — they do NOT work:**
+   - ❌ `python3 catalog_manager.py install ...` — the script has no install command
+   - ❌ `claude plugin install ...` — not a valid CLI syntax
+   - ❌ `claude /plugin install ...` — not a valid CLI syntax
+   - ❌ `/plugin install github:owner/repo` — github: prefix not supported
 
 3. Reload plugins to activate:
    ```
    /reload-plugins
    ```
-4. Record usage:
+4. Record usage (this IS a python script — correct):
    ```bash
    python3 ${CLAUDE_PLUGIN_ROOT}/scripts/catalog_manager.py record_usage {name}
    ```

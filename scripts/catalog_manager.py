@@ -311,7 +311,10 @@ def main():
             print(json.dumps({"needs_refresh": True}))
 
     else:
-        print(json.dumps({"error": f"Unknown command: {command}"}))
+        hint = ""
+        if command in ("install", "uninstall", "enable", "disable"):
+            hint = f" This script cannot {command} plugins. Use the Claude Code slash command: /plugin {command} <name>@<marketplace>"
+        print(json.dumps({"error": f"Unknown command: {command}.{hint} Available commands: build, query, installed, record_usage, find_unused, refresh_check"}))
         sys.exit(1)
 
 

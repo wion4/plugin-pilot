@@ -83,9 +83,17 @@ python3 ${CLAUDE_PLUGIN_ROOT}/scripts/catalog_manager.py find_unused 30
 
 Present findings and ask for confirmation before removing anything.
 
+## CRITICAL: Installation Commands
+
+**This agent does NOT install plugins.** It only analyzes and recommends. The main agent handles installation using Claude Code slash commands.
+
+- Python scripts (`catalog_manager.py`) = querying/analysis only. NO install command exists.
+- Actual installation = `/plugin install name@marketplace` (slash command, NOT bash)
+- Do NOT attempt: `python3 catalog_manager.py install ...` — this command does not exist.
+
 ## Output Format
 
 Return a structured summary:
-- **To install**: list with reasons
+- **To install**: list with reasons and correct install command (`/plugin install name@marketplace`)
 - **To remove**: list with reasons (unused/conflict/deprecated)
 - **Already optimal**: confirmation that current setup is good
