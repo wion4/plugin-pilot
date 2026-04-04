@@ -21,15 +21,15 @@ When Claude enters plan mode or creates an implementation plan, Plugin Pilot add
 ```
 ## Tooling (Plugin Pilot)
 
-### Required plugins (not installed):
-- **typescript-lsp** — code intelligence for TypeScript [official]
-- **playwright** — E2E browser testing [official]
+### Relevant skills (already available):
+- frontend-design:frontend-design — UI component creation
+
+### Recommended plugins (not installed):
+- **typescript-lsp** — code intelligence for TypeScript [official] — HIGH
+- **playwright** — E2E browser testing [official] — Medium
 
 ### Recommended stacks:
 - **Fullstack Web** — frontend-design + typescript-lsp + playwright + context7
-
-### Relevant skills (already available):
-- frontend-design:frontend-design — UI component creation
 
 ### Action: Install missing plugins before starting implementation? [Yes / Skip]
 ```
@@ -46,9 +46,9 @@ If the plan involves technologies not covered by official plugins, use the stack
 
 **Timing matters:** suggest plugins BEFORE implementation starts, not during. The plan phase is the ideal moment to set up the right tools.
 
-### 1. Task-Aware Plugin Detection
+### 1. Task-Aware Detection
 
-When the user starts working on a task, analyze the context to determine if any available plugins would help. Consider:
+When the user starts working on a task, analyze the context to determine what tools would help. Consider:
 
 - **File types in the project** — `.ts`/`.tsx` → typescript-lsp, `.py` → pyright-lsp, `.rs` → rust-analyzer-lsp, etc.
 - **Frameworks detected** — `package.json` with React → frontend-design, Laravel → laravel-boost
@@ -56,21 +56,32 @@ When the user starts working on a task, analyze the context to determine if any 
 - **Services mentioned** — "Slack message" → slack, "Linear ticket" → linear, "GitHub issue" → github
 - **Workflow patterns** — "test in browser" → playwright, "design UI" → frontend-design
 
-### 2. Plugin Resolution
+### 2. Search Priority (what to search FIRST)
 
-Query the catalog to find matching plugins:
+⚠️ **Search in this order — smaller and lighter first:**
+
+1. **Skills first** — lightweight QoL improvements from already-installed plugins. No installation needed, just inform the user. Scan skill entries in installed plugins and in the catalog.
+2. **Stacks second** — search for matching stacks (built-in `stacks.json`, then community via stack-scout). Stacks are analyzed early but **presented AFTER individual plugins** (see presentation order below).
+3. **Plugins third** — individual plugins from official marketplace, then configured marketplaces, then GitHub community.
+
+### 3. Presentation Order (what to SHOW the user)
+
+⚠️ **Present results in this order — actionable items first:**
+
+1. **Available skills** (from installed plugins) — "У вас уже есть скилл X, он поможет с Y"
+2. **Individual plugins** — sorted by priority: HIGH (LSP, core tools) → Medium (framework, task) → Optional (workflow, QoL)
+3. **Stacks** — bundled recommendations last, as they are heavier decisions: "Для полноценной работы с X есть стек: [list]"
+
+### 4. Resolution
+
+Query the catalog to find matching plugins and skills:
 
 ```bash
 python3 ${CLAUDE_PLUGIN_ROOT}/scripts/catalog_manager.py query
-```
-
-Cross-reference with installed plugins:
-
-```bash
 python3 ${CLAUDE_PLUGIN_ROOT}/scripts/catalog_manager.py installed
 ```
 
-Only suggest plugins that are NOT already installed.
+Only suggest plugins that are NOT already installed. Skills from installed plugins are always available — just inform.
 
 ### 3. Installation Flow
 

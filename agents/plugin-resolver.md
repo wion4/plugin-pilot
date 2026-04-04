@@ -60,19 +60,25 @@ python3 ${CLAUDE_PLUGIN_ROOT}/scripts/catalog_manager.py installed
 python3 ${CLAUDE_PLUGIN_ROOT}/scripts/catalog_manager.py query
 ```
 
-### 3. Match and Recommend
+### 3. Search Priority (what to look for FIRST)
 
-Cross-reference detected context with the catalog. Load the plugin-pilot skill for the full mapping reference.
-
-Prioritize:
-1. LSP plugins for detected languages (biggest productivity boost)
-2. Framework-specific plugins
-3. Task-specific plugins (based on what user asked to do)
-4. Workflow plugins (git, communication, project management)
+Search in this order — lightweight first:
+1. **Skills** — from already-installed plugins. No installation needed, just inform.
+2. **Stacks** — check built-in stacks.json, note matches for later presentation.
+3. **Plugins** — individual plugins from catalog (official → configured → community).
 
 ### 4. Present Recommendations
 
-For each recommendation, explain WHY it's relevant to the current task. Use AskUserQuestion with batched suggestions when possible.
+**Present in this order — actionable items first:**
+
+1. **Available skills** — from installed plugins, just inform: "У вас уже есть скилл X"
+2. **Individual plugins** — sorted by priority:
+   - HIGH: LSP plugins for detected languages (biggest productivity boost)
+   - Medium: Framework-specific and task-specific plugins
+   - Optional: Workflow plugins (git, communication, QoL)
+3. **Stacks** — bundled recommendations last (heavier decisions)
+
+For each recommendation, explain WHY it's relevant to the current task.
 
 ### 5. Handle Cleanup
 
@@ -93,7 +99,9 @@ Present findings and ask for confirmation before removing anything.
 
 ## Output Format
 
-Return a structured summary:
-- **To install**: list with reasons and correct install command (`/plugin install name@marketplace`)
-- **To remove**: list with reasons (unused/conflict/deprecated)
-- **Already optimal**: confirmation that current setup is good
+Return a structured summary in this exact order:
+1. **Available skills** (from installed plugins) — name, what it does, when to use
+2. **Plugins to install** — name, priority (HIGH/Medium/Optional), reason, install command (`claude plugins install name@marketplace`)
+3. **Recommended stacks** — stack name, included plugins, what it covers
+4. **To remove** (if cleanup requested) — name, reason (unused/conflict/deprecated)
+5. **Already optimal** — confirmation if current setup is good
