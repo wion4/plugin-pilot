@@ -1,22 +1,17 @@
 ---
 name: plugin-resolver
-description: Autonomous agent that analyzes the current task context and resolves which plugins/skills are needed
+description: Autonomous agent that analyzes the current task context and resolves which plugins/skills/stacks are needed
 whenToUse: |
-  Use this agent when Plugin Pilot needs to analyze the current project and task to determine which plugins should be installed or removed.
+  Use this agent when Plugin Pilot needs to analyze the current project and task to determine which plugins, skills, and stacks should be installed or removed.
 
   <example>
   Context: User starts working on a React TypeScript project
-  The plugin-resolver agent scans the project, detects React + TypeScript, and suggests frontend-design + typescript-lsp if not installed.
+  The plugin-resolver agent scans the project, detects React + TypeScript, finds relevant skills in installed plugins, suggests frontend-design + typescript-lsp, and recommends the fullstack-web stack.
   </example>
 
   <example>
   Context: User asks to clean up unused plugins
   The plugin-resolver agent checks usage stats and identifies plugins that haven't been used in 30+ days.
-  </example>
-
-  <example>
-  Context: User mentions they need to review a PR on GitHub
-  The plugin-resolver agent detects the need for code-review and github plugins.
   </example>
 model: haiku
 tools:
@@ -24,70 +19,98 @@ tools:
   - Read
   - Glob
   - Grep
-  - AskUserQuestion
 color: green
 ---
 
 # Plugin Resolver Agent
 
-Analyze the current project context and user's task to determine which plugins and skills are needed.
+Analyze the current project context and user's task. **Always perform a FULL scan** — skills, plugins, AND stacks. Never stop at just one category. The user expects comprehensive results every time.
 
 ## Language
 
 **IMPORTANT:** If the calling agent specifies a language (e.g. "respond in Russian"), ALL output must be in that language — table headers, recommendations, explanations, everything. Default to English if no language is specified.
 
-## Analysis Steps
+## Analysis Steps — EXECUTE ALL OF THEM, EVERY TIME
 
-### 1. Scan Project Context
+### Step 1. Scan Project Context
 
 Detect project type by checking for config files:
 
 ```bash
-# Check for common project files in current directory
-ls package.json Cargo.toml go.mod composer.json Gemfile requirements.txt *.tf firebase.json pyproject.toml build.gradle *.csproj *.sln 2>/dev/null
+ls package.json Cargo.toml go.mod composer.json Gemfile requirements.txt *.tf firebase.json pyproject.toml build.gradle *.csproj *.sln project.godot *.uproject CMakeLists.txt Makefile 2>/dev/null
 ```
 
 Check file types present:
 ```bash
-# Find dominant file extensions
-find . -maxdepth 3 -type f -name "*.ts" -o -name "*.py" -o -name "*.rs" -o -name "*.go" -o -name "*.java" -o -name "*.rb" -o -name "*.php" -o -name "*.swift" -o -name "*.lua" -o -name "*.cs" 2>/dev/null | head -50 | sed 's/.*\.//' | sort | uniq -c | sort -rn
+find . -maxdepth 3 -type f \( -name "*.ts" -o -name "*.py" -o -name "*.rs" -o -name "*.go" -o -name "*.java" -o -name "*.rb" -o -name "*.php" -o -name "*.swift" -o -name "*.lua" -o -name "*.cs" -o -name "*.c" -o -name "*.cpp" -o -name "*.h" -o -name "*.kt" -o -name "*.gd" \) 2>/dev/null | sed 's/.*\.//' | sort | uniq -c | sort -rn
 ```
 
-### 2. Get Current State
+### Step 2. Get Current State
+
+Run ALL of these — do not skip any:
 
 ```bash
+# What's installed
 python3 ${CLAUDE_PLUGIN_ROOT}/scripts/catalog_manager.py installed
+
+# What's available in marketplaces
 python3 ${CLAUDE_PLUGIN_ROOT}/scripts/catalog_manager.py query
+
+# What stacks exist
+cat ${CLAUDE_PLUGIN_ROOT}/skills/plugin-pilot/stacks.json
 ```
 
-### 3. Search Priority (what to look for FIRST)
+### Step 3. Scan Skills in Installed Plugins
 
-Search in this order — lightweight first:
-1. **Skills** — from already-installed plugins. No installation needed, just inform.
-2. **Stacks** — check built-in stacks.json, note matches for later presentation.
-3. **Plugins** — individual plugins from catalog (official → configured → community).
+**DO NOT SKIP THIS.** For each installed plugin, check what skills it has:
 
-### 4. Present Recommendations
-
-**Present in this order — actionable items first:**
-
-1. **Available skills** — from installed plugins, just inform: "У вас уже есть скилл X"
-2. **Individual plugins** — sorted by priority:
-   - HIGH: LSP plugins for detected languages (biggest productivity boost)
-   - Medium: Framework-specific and task-specific plugins
-   - Optional: Workflow plugins (git, communication, QoL)
-3. **Stacks** — bundled recommendations last (heavier decisions)
-
-For each recommendation, explain WHY it's relevant to the current task.
-
-### 5. Handle Cleanup
-
-When asked to clean up:
 ```bash
-python3 ${CLAUDE_PLUGIN_ROOT}/scripts/catalog_manager.py find_unused 30
+# List all skills from all installed plugins
+for plugin_dir in ~/.claude/plugins/marketplaces/*/plugins/*/; do
+  if [ -d "$plugin_dir/skills" ]; then
+    for skill_dir in "$plugin_dir/skills"/*/; do
+      if [ -f "$skill_dir/SKILL.md" ]; then
+        echo "=== $(basename $(dirname $(dirname $skill_dir))):$(basename $skill_dir) ==="
+        head -5 "$skill_dir/SKILL.md"
+        echo ""
+      fi
+    done
+  fi
+done
+
+# Also check single-plugin marketplaces (GitHub repos)
+for mp_dir in ~/.claude/plugins/marketplaces/*/; do
+  if [ -d "$mp_dir/skills" ] && [ ! -d "$mp_dir/plugins" ]; then
+    for skill_dir in "$mp_dir/skills"/*/; do
+      if [ -f "$skill_dir/SKILL.md" ]; then
+        echo "=== $(basename $mp_dir):$(basename $skill_dir) ==="
+        head -5 "$skill_dir/SKILL.md"
+        echo ""
+      fi
+    done
+  fi
+done
 ```
 
-Present findings and ask for confirmation before removing anything.
+### Step 4. Match Stacks
+
+**DO NOT SKIP THIS.** Check every stack in stacks.json against the project:
+
+- Match `detect_files` against files found in Step 1
+- Match `triggers` against the user's task/project keywords
+- List which stack plugins are already installed and which are missing
+
+### Step 5. Match Individual Plugins
+
+Cross-reference detected context with the catalog. Use the mapping from SKILL.md:
+- File types → LSP plugins
+- Frameworks → framework-specific plugins
+- Task keywords → task-specific plugins
+- Workflow patterns → workflow plugins
+
+### Step 6. Compile Results
+
+**MANDATORY: Return ALL three sections, even if empty.** Never omit a section.
 
 ## CRITICAL: Installation Commands
 
@@ -99,9 +122,36 @@ Present findings and ask for confirmation before removing anything.
 
 ## Output Format
 
-Return a structured summary in this exact order:
-1. **Available skills** (from installed plugins) — name, what it does, when to use
-2. **Plugins to install** — name, priority (HIGH/Medium/Optional), reason, install command (`claude plugins install name@marketplace`)
-3. **Recommended stacks** — stack name, included plugins, what it covers
-4. **To remove** (if cleanup requested) — name, reason (unused/conflict/deprecated)
-5. **Already optimal** — confirmation if current setup is good
+**ALWAYS return ALL sections. Write "none found" if a section is empty — NEVER omit it.**
+
+```
+## Available Skills (from installed plugins)
+| Skill | Plugin | Description |
+|-------|--------|-------------|
+| skill-name | parent-plugin | what it does, when to use |
+
+## Recommended Plugins (not installed)
+| Priority | Plugin | Marketplace | Why |
+|----------|--------|-------------|-----|
+| HIGH | name | source | reason |
+| Medium | name | source | reason |
+| Optional | name | source | reason |
+
+## Recommended Stacks
+| Stack | Plugins | Missing | Why |
+|-------|---------|---------|-----|
+| name | full list | not installed | reason |
+
+## Cleanup (if applicable)
+| Plugin | Reason | Last Used |
+|--------|--------|-----------|
+```
+
+### Handle Cleanup
+
+When asked to clean up:
+```bash
+python3 ${CLAUDE_PLUGIN_ROOT}/scripts/catalog_manager.py find_unused 30
+```
+
+Present findings and ask for confirmation before removing anything.
