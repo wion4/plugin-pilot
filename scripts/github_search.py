@@ -203,14 +203,61 @@ def verify_plugin(repo_full_name: str, token: str = "") -> dict:
     except (urllib.error.URLError, json.JSONDecodeError):
         return {"error": f"Could not access {repo_full_name}"}
 
+    # Get license info from repo API
+    try:
+        repo_info = github_api(f"/repos/{repo_full_name}", token)
+        license_info = repo_info.get("license") or {}
+        checks["license_spdx"] = license_info.get("spdx_id", "NONE")
+        checks["license_name"] = license_info.get("name", "No license")
+        checks["repo_stars"] = repo_info.get("stargazers_count", 0)
+        checks["repo_age_days"] = 0
+        created = repo_info.get("created_at", "")
+        if created:
+            from datetime import datetime, timezone
+            created_dt = datetime.fromisoformat(created.replace("Z", "+00:00"))
+            checks["repo_age_days"] = (datetime.now(timezone.utc) - created_dt).days
+    except (urllib.error.URLError, json.JSONDecodeError):
+        checks["license_spdx"] = "UNKNOWN"
+        checks["license_name"] = "Unknown"
+        checks["repo_stars"] = 0
+        checks["repo_age_days"] = 0
+
+    # License risk assessment
+    restrictive_licenses = {"GPL-2.0", "GPL-3.0", "AGPL-3.0", "EUPL-1.1", "EUPL-1.2"}
+    permissive_licenses = {"MIT", "Apache-2.0", "BSD-2-Clause", "BSD-3-Clause", "ISC", "Unlicense", "0BSD"}
+
+    spdx = checks.get("license_spdx", "NONE")
+    if spdx in restrictive_licenses:
+        checks["license_risk"] = "restrictive"
+        checks["license_warning"] = f"Uses {spdx} — copyleft license, may impose obligations on your project"
+    elif spdx == "NONE" or spdx == "NOASSERTION":
+        checks["license_risk"] = "no_license"
+        checks["license_warning"] = "No license found — legally you have no rights to use this code"
+    elif spdx in permissive_licenses:
+        checks["license_risk"] = "permissive"
+        checks["license_warning"] = ""
+    else:
+        checks["license_risk"] = "unknown"
+        checks["license_warning"] = f"License '{spdx}' — review terms before installing"
+
     checks["is_valid_plugin"] = checks["has_plugin_json"]
+    checks["has_skills"] = "skills" in root_names
+    checks["has_commands"] = "commands" in root_names
+    checks["has_agents"] = "agents" in root_names
+    checks["has_hooks"] = "hooks" in root_names
+    checks["has_privacy_policy"] = "PRIVACY.md" in root_names or "privacy.md" in root_names
+
     checks["trust_score"] = sum([
         checks["has_plugin_json"] * 3,
         checks["has_readme"] * 2,
         checks["has_license"] * 2,
+        checks.get("has_privacy_policy", False) * 1,
         checks["has_skills"],
         checks["has_commands"],
         checks["has_agents"],
+        min(checks["repo_stars"], 10),  # up to 10 bonus for stars
+        1 if checks["repo_age_days"] > 30 else 0,  # bonus for not brand-new
+        -3 if checks["license_risk"] == "no_license" else 0,  # penalty for no license
     ])
 
     return checks

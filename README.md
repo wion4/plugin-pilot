@@ -6,10 +6,12 @@ AI-driven plugin lifecycle manager for Claude Code. Automatically detects, insta
 
 - **Auto-detect** — analyzes your project and task to suggest relevant plugins
 - **Smart install** — installs plugins with one confirmation, reloads automatically
+- **Community search** — finds plugins on GitHub, verifies structure and license before suggesting
 - **Cleanup** — finds unused, conflicting, or deprecated plugins and offers removal
 - **Catalog sync** — periodically refreshes available plugins from all marketplaces
 - **Skill awareness** — not just plugins, also suggests relevant skills
 - **Usage tracking** — tracks which plugins you actually use to inform cleanup decisions
+- **License checks** — warns about restrictive or missing licenses on community plugins
 
 ## Examples
 
@@ -27,6 +29,8 @@ AI-driven plugin lifecycle manager for Claude Code. Automatically detects, insta
 /plugin install github:wion4/plugin-pilot
 ```
 
+On first launch, Plugin Pilot will ask you to accept the Terms of Service and Privacy Policy.
+
 ## Usage
 
 Plugin Pilot works automatically — it analyzes your messages and project context, suggesting plugins when relevant.
@@ -34,19 +38,42 @@ Plugin Pilot works automatically — it analyzes your messages and project conte
 Manual commands:
 
 ```
-/plugin-pilot:pilot           # Scan project, suggest plugins
-/plugin-pilot:pilot cleanup   # Find and remove unused plugins
-/plugin-pilot:pilot catalog   # Refresh plugin catalog
-/plugin-pilot:pilot status    # Show plugin stats
+/plugin-pilot:pilot              # Scan project, suggest plugins
+/plugin-pilot:pilot cleanup      # Find and remove unused plugins
+/plugin-pilot:pilot catalog      # Refresh plugin catalog
+/plugin-pilot:pilot status       # Show plugin stats and consent status
+/plugin-pilot:pilot search <q>   # Search GitHub for community plugins
+/plugin-pilot:pilot verify <r>   # Verify a GitHub repo (owner/repo)
+/plugin-pilot:pilot reset        # Delete all local data (GDPR)
 ```
 
-## Unofficial marketplaces
+## Trust Score
 
-Plugin Pilot scans all configured marketplaces, not just the official one. Plugins from unofficial marketplaces are flagged with a warning.
+Community plugins are scored based on:
+- Plugin structure (manifest, skills, commands, agents)
+- Documentation (README, LICENSE, PRIVACY.md)
+- Repository metrics (stars, age)
+- License type (permissive preferred, penalty for missing)
 
-## Privacy
+**Trust score is NOT a security audit.** It only indicates structural quality. Always review source code before installing community plugins.
 
-All data stays local. Usage stats and catalog are stored in `data/` within the plugin directory. No data is sent anywhere.
+## Legal
+
+By using Plugin Pilot, you agree to:
+
+- **[Terms of Service](TERMS.md)** — usage terms, liability limitations, indemnification
+- **[Privacy Policy](PRIVACY.md)** — data handling, local storage, GitHub API usage
+- **[Third-Party Disclaimer](DISCLAIMER.md)** — liability waiver for community plugins
+
+Plugin Pilot requires explicit acceptance of Terms and Privacy Policy before operating. Community plugin search requires separate opt-in consent.
+
+### Data deletion
+
+All data is stored locally. Run `/plugin-pilot:pilot reset` or delete the `data/` directory to remove everything.
+
+### Not affiliated with Anthropic
+
+Plugin Pilot is a community project. It is not affiliated with, endorsed by, or sponsored by Anthropic, PBC. "Claude Code" and "Anthropic" are trademarks of Anthropic, PBC.
 
 ## License
 
