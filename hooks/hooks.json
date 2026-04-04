@@ -6,7 +6,7 @@
         "hooks": [
           {
             "type": "prompt",
-            "prompt": "Plugin Pilot is active. Briefly analyze the user's message for task context. If the task clearly involves a technology, framework, or workflow that has a matching plugin NOT currently installed, suggest it concisely. Check installed plugins first: python3 ${CLAUDE_PLUGIN_ROOT}/scripts/catalog_manager.py installed. Do NOT suggest plugins for every message — only when there is a strong, obvious match. Max 1 suggestion per session unless user explicitly asks for more. If nothing is clearly needed, do nothing silently."
+            "prompt": "Plugin Pilot is active. First check consent: python3 ${CLAUDE_PLUGIN_ROOT}/scripts/consent_manager.py check privacy_policy. If NOT accepted, do nothing — wait for SessionStart to handle onboarding. If accepted, briefly analyze the user's message for task context. If the task clearly involves a technology, framework, or workflow that has a matching plugin NOT currently installed, suggest it concisely. Check installed plugins first: python3 ${CLAUDE_PLUGIN_ROOT}/scripts/catalog_manager.py installed. Do NOT suggest plugins for every message — only when there is a strong, obvious match. Max 1 suggestion per session unless user explicitly asks for more. If nothing is clearly needed, do nothing silently. For community plugins: also check python3 ${CLAUDE_PLUGIN_ROOT}/scripts/consent_manager.py check third_party_disclaimer — only suggest GitHub community plugins if that consent is accepted."
           }
         ]
       }
@@ -17,7 +17,7 @@
         "hooks": [
           {
             "type": "prompt",
-            "prompt": "Plugin Pilot: Check if catalog needs refresh: python3 ${CLAUDE_PLUGIN_ROOT}/scripts/catalog_manager.py refresh_check. If stale, rebuild silently: python3 ${CLAUDE_PLUGIN_ROOT}/scripts/catalog_manager.py build. Then scan the current working directory for project context (config files, dominant languages) and cross-reference with installed plugins. If there are obvious missing plugins for this project, mention them briefly at the start. Keep it to one line unless user asks for details."
+            "prompt": "Plugin Pilot first-run check. Run: python3 ${CLAUDE_PLUGIN_ROOT}/scripts/consent_manager.py check privacy_policy\n\nIf NOT accepted: Present the privacy policy to the user. Read ${CLAUDE_PLUGIN_ROOT}/PRIVACY.md and show a brief summary:\n- Plugin Pilot operates locally, tracks plugin usage stats for cleanup\n- GitHub API used only for community plugin search\n- No data sent to plugin authors or third parties\nThen ask via AskUserQuestion: 'Do you accept the Plugin Pilot privacy policy?' with options ['Accept', 'Decline', 'Read full policy']. If 'Read full policy' — show the full PRIVACY.md. If accepted, run: python3 ${CLAUDE_PLUGIN_ROOT}/scripts/consent_manager.py accept privacy_policy. If declined, inform user that Plugin Pilot will not function without consent.\n\nAfter privacy accepted, also ask about third-party plugins: 'Plugin Pilot can search GitHub for community plugins. These are NOT verified by Anthropic and may carry risks. Enable community plugin search?' with options ['Yes, I understand the risks', 'No, only official plugins', 'Read disclaimer']. If 'Read disclaimer' — show ${CLAUDE_PLUGIN_ROOT}/DISCLAIMER.md. Record decision: python3 ${CLAUDE_PLUGIN_ROOT}/scripts/consent_manager.py accept/decline third_party_disclaimer.\n\nIf privacy already accepted: silently check catalog freshness and scan project context as normal."
           }
         ]
       }

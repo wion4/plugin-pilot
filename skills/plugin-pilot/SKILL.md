@@ -195,6 +195,50 @@ Users may configure additional marketplaces beyond the official one. Plugin Pilo
 - Warn: "This plugin is from an unofficial marketplace. Install at your own risk."
 - Official marketplace plugins are preferred when multiple options exist
 
+## Legal & Consent
+
+### First-Run Onboarding
+
+On first session, before any plugin operations:
+
+1. **Privacy policy** — present summary from `${CLAUDE_PLUGIN_ROOT}/PRIVACY.md`, ask for acceptance
+   ```bash
+   python3 ${CLAUDE_PLUGIN_ROOT}/scripts/consent_manager.py check privacy_policy
+   ```
+   If not accepted, Plugin Pilot must not function.
+
+2. **Third-party disclaimer** — ask if user wants community plugin search enabled
+   ```bash
+   python3 ${CLAUDE_PLUGIN_ROOT}/scripts/consent_manager.py check third_party_disclaimer
+   ```
+   If not accepted, never suggest GitHub community plugins. Only use official and configured marketplaces.
+
+### Before Installing Community Plugins
+
+Every time a community (non-official) plugin is about to be suggested:
+- Verify third_party_disclaimer consent exists
+- Show warning: "⚠️ Community plugin — not verified by Anthropic. May contain harmful code. Install at your own risk."
+- Show trust score breakdown
+- Link to the repo so user can review source code
+
+### Consent Management
+
+```bash
+# Check consent
+python3 ${CLAUDE_PLUGIN_ROOT}/scripts/consent_manager.py check <type>
+
+# Record acceptance
+python3 ${CLAUDE_PLUGIN_ROOT}/scripts/consent_manager.py accept <type>
+
+# Record decline
+python3 ${CLAUDE_PLUGIN_ROOT}/scripts/consent_manager.py decline <type>
+
+# Full status
+python3 ${CLAUDE_PLUGIN_ROOT}/scripts/consent_manager.py status
+```
+
+Types: `privacy_policy`, `third_party_disclaimer`
+
 ## Important Rules
 
 1. **Never install without asking** — always confirm with the user first
@@ -203,3 +247,5 @@ Users may configure additional marketplaces beyond the official one. Plugin Pilo
 4. **Track usage** — record when plugins are actually used to inform cleanup decisions
 5. **Respect user preferences** — if user declines a plugin, don't suggest it again in the same session
 6. **Batch suggestions** — if multiple plugins are needed, suggest them together in one question
+7. **Consent required** — never operate without privacy policy acceptance
+8. **Community only with disclaimer** — never suggest GitHub plugins without third_party_disclaimer consent
