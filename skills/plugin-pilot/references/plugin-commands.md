@@ -2,65 +2,85 @@
 
 This is the authoritative reference for plugin CLI commands. Use ONLY these commands.
 
+## Two Ways to Run Commands
+
+1. **Slash commands** (inside Claude Code session): `/plugin install ...`
+2. **Bash CLI** (from terminal or Bash tool): `claude plugins install ...`
+
+Both are equivalent. **Agents MUST use the Bash CLI form** since they cannot type slash commands.
+
+## Finding Plugin Names in a Marketplace
+
+After adding a marketplace, the plugin name may not be obvious. To find it:
+```bash
+# List all installed plugins (shows name@marketplace format)
+claude plugins list
+```
+
+If installation fails with "Plugin not found", the repo itself IS the plugin (single-plugin repo).
+In that case, the marketplace name is the repo name without the owner prefix.
+Check with: `ls ~/.claude/plugins/marketplaces/<marketplace-name>/`
+
 ## Plugin Installation
 
 ### From a marketplace (official or configured)
+```bash
+claude plugins install <plugin-name>@<marketplace-name>
 ```
-/plugin install <plugin-name>@<marketplace-name>
-```
-Example: `/plugin install typescript-lsp@claude-plugins-official`
+Example: `claude plugins install typescript-lsp@claude-plugins-official`
 
 ### From a local directory (for development/testing)
-```
-/plugin install --plugin-dir /path/to/local/plugin
+```bash
+claude plugins install --plugin-dir /path/to/local/plugin
 ```
 
 ### From GitHub (two-step process)
 GitHub repos CANNOT be installed directly. You must:
 1. Add the repo as a marketplace first:
-   ```
-   /plugin marketplace add <owner/repo>
+   ```bash
+   claude plugins marketplace add <owner/repo>
    ```
 2. Then install from it:
+   ```bash
+   claude plugins install <plugin-name>@<marketplace-name>
    ```
-   /plugin install <plugin-name>@<owner/repo>
-   ```
+   Note: `<marketplace-name>` is usually the repo name (e.g., `jmagar/claude-homelab` → marketplace name is `claude-homelab`)
 
-**IMPORTANT:** `/plugin install github:owner/repo` does NOT work. Never use this syntax.
+**IMPORTANT:** `claude plugins install github:owner/repo` does NOT work. Never use this syntax.
 
 ## Plugin Uninstallation
 
-```
-/plugin uninstall <plugin-name>@<marketplace-name>
+```bash
+claude plugins uninstall <plugin-name>@<marketplace-name>
 ```
 
 ## Plugin Enable/Disable
 
-```
-/plugin enable <plugin-name>@<marketplace-name>
-/plugin disable <plugin-name>@<marketplace-name>
+```bash
+claude plugins enable <plugin-name>@<marketplace-name>
+claude plugins disable <plugin-name>@<marketplace-name>
 ```
 
 ## Marketplace Management
 
 ### List configured marketplaces
-```
-/plugin marketplace list
+```bash
+claude plugins marketplace list
 ```
 
 ### Add a marketplace (GitHub repo or URL)
-```
-/plugin marketplace add <owner/repo>
+```bash
+claude plugins marketplace add <owner/repo>
 ```
 
 ### Remove a marketplace
-```
-/plugin marketplace remove <marketplace-name>
+```bash
+claude plugins marketplace remove <marketplace-name>
 ```
 
 ### Update marketplace catalog
-```
-/plugin marketplace update
+```bash
+claude plugins marketplace update
 ```
 
 ## Reload Plugins
@@ -69,17 +89,19 @@ After installing or uninstalling, reload to activate changes:
 ```
 /reload-plugins
 ```
+Note: `/reload-plugins` is a slash command only — no bash equivalent.
 
 ## Listing Installed Plugins
 
-```
-/plugin list
+```bash
+claude plugins list
 ```
 
 ## Key Rules
 
-1. Always use `/plugin install`, not `claude plugin install` or `claude /plugin install`
+1. Agents use `claude plugins ...` (bash). Users may use `/plugin ...` (slash commands). Both work.
 2. GitHub repos require adding as marketplace first — no direct GitHub install
 3. The `@marketplace-name` suffix identifies which marketplace the plugin comes from
 4. Always `/reload-plugins` after install/uninstall
-5. For community GitHub plugins: add repo as marketplace → install from it
+5. For community GitHub plugins: `marketplace add` → `install` from it
+6. If "Plugin not found" after adding marketplace: check plugin name with `claude plugins list` or `ls ~/.claude/plugins/marketplaces/<name>/`

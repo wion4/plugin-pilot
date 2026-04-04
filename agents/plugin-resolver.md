@@ -85,10 +85,10 @@ Present findings and ask for confirmation before removing anything.
 
 ## CRITICAL: Installation Commands
 
-**This agent does NOT install plugins.** It only analyzes and recommends. The main agent handles installation using Claude Code slash commands.
+**This agent does NOT install plugins.** It only analyzes and recommends. The main agent handles installation.
 
 - Python scripts (`catalog_manager.py`) = querying/analysis only. NO install command exists.
-- Actual installation = `/plugin install name@marketplace` (slash command, NOT bash)
+- Actual installation = `claude plugins install name@marketplace` (via Bash tool)
 - Do NOT attempt: `python3 catalog_manager.py install ...` — this command does not exist.
 
 ## Output Format

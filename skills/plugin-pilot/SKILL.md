@@ -76,9 +76,9 @@ Only suggest plugins that are NOT already installed.
 
 ⚠️ **TWO SEPARATE SYSTEMS — DO NOT CONFUSE:**
 - **Python scripts** (`catalog_manager.py`, `github_search.py`) = for QUERYING catalog, tracking usage, searching GitHub. They CANNOT install/uninstall plugins.
-- **Claude Code CLI commands** (`/plugin install`, `/plugin uninstall`, `/reload-plugins`) = for ACTUAL installation and removal. These are slash commands typed directly, NOT bash commands.
+- **Claude Code CLI** (`claude plugins install`, `claude plugins uninstall`) = for ACTUAL installation and removal via Bash tool.
 
-**Reference: `${CLAUDE_PLUGIN_ROOT}/skills/plugin-pilot/references/plugin-commands.md`**
+**Reference: `${CLAUDE_PLUGIN_ROOT}/skills/plugin-pilot/references/plugin-commands.md`** — read this before any plugin operation.
 
 When a relevant plugin is identified:
 
@@ -87,22 +87,21 @@ When a relevant plugin is identified:
    - Options: ["Да, ставь", "Нет, не нужно", "Расскажи подробнее"]
 2. If confirmed, install depending on source:
 
-   **From official/configured marketplace:**
-   ```
-   /plugin install {plugin-name}@{marketplace-name}
-   ```
-
-   **From GitHub community repo (two-step):**
-   ```
-   /plugin marketplace add {owner/repo}
-   /plugin install {plugin-name}@{owner/repo}
+   **From official/configured marketplace (via Bash tool):**
+   ```bash
+   claude plugins install {plugin-name}@{marketplace-name}
    ```
 
-   **NEVER use any of these — they do NOT work:**
+   **From GitHub community repo (two-step, via Bash tool):**
+   ```bash
+   claude plugins marketplace add {owner/repo}
+   claude plugins install {plugin-name}@{marketplace-name}
+   ```
+   Note: marketplace-name is usually the repo name (e.g., `owner/my-plugin` → `my-plugin`)
+
+   **NEVER use:**
    - ❌ `python3 catalog_manager.py install ...` — the script has no install command
-   - ❌ `claude plugin install ...` — not a valid CLI syntax
-   - ❌ `claude /plugin install ...` — not a valid CLI syntax
-   - ❌ `/plugin install github:owner/repo` — github: prefix not supported
+   - ❌ `claude plugins install github:owner/repo` — github: prefix not supported
 
 3. Reload plugins to activate:
    ```
@@ -131,11 +130,11 @@ Before removing, always confirm with the user:
 - Question: "Плагин **{name}** не использовался {days} дней. Удалить?"
 - Options: ["Удалить", "Оставить", "Напомни позже"]
 
-If confirmed, uninstall:
+If confirmed, uninstall via Bash tool:
+```bash
+claude plugins uninstall {plugin-name}@{marketplace-name}
 ```
-/plugin uninstall {plugin-name}@{marketplace-name}
-/reload-plugins
-```
+Then reload: `/reload-plugins`
 
 ### 5. Catalog Synchronization
 
@@ -292,15 +291,15 @@ Check the result:
 
 ### Installation from GitHub
 
-GitHub repos cannot be installed directly. Two-step process:
+GitHub repos cannot be installed directly. Two-step process (via Bash tool):
 
+```bash
+claude plugins marketplace add owner/repo-name
+claude plugins install plugin-name@marketplace-name
 ```
-/plugin marketplace add owner/repo-name
-/plugin install plugin-name@owner/repo-name
-/reload-plugins
-```
+Then: `/reload-plugins`
 
-**NEVER use `/plugin install github:owner/repo`** — this syntax does not exist.
+**NEVER use `github:owner/repo`** — this syntax does not exist.
 
 ## Unofficial Marketplaces
 
