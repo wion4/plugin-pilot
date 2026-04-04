@@ -147,6 +147,46 @@ Not just plugins — also detect when individual skills within installed plugins
 | `supabase/` dir | Supabase | supabase |
 | `firebase.json` | Firebase | firebase |
 
+## GitHub Community Search
+
+When no suitable plugin exists in configured marketplaces, search GitHub for community plugins:
+
+```bash
+python3 ${CLAUDE_PLUGIN_ROOT}/scripts/github_search.py search "react dashboard"
+```
+
+### Search modes
+
+- **By query**: `github_search.py search <query>` — free text search
+- **By task keywords**: `github_search.py task <keyword1,keyword2>` — task-oriented search
+- **General discovery**: `github_search.py discover` — find popular Claude Code plugins
+- **Verify before install**: `github_search.py verify <owner/repo>` — check if repo is a valid plugin
+
+### Verification before suggesting community plugins
+
+Before suggesting a GitHub community plugin, ALWAYS verify it:
+
+```bash
+python3 ${CLAUDE_PLUGIN_ROOT}/scripts/github_search.py verify owner/repo
+```
+
+Check the result:
+- `is_valid_plugin: true` — has proper `.claude-plugin/plugin.json`
+- `trust_score` — higher is better (max ~10): has license, README, proper structure
+- `has_license` — prefer plugins with open-source licenses
+
+### Priority order when suggesting
+
+1. **Official marketplace** — always prefer first
+2. **Unofficial configured marketplaces** — user already trusts these
+3. **GitHub community (verified)** — warn: "Community plugin from GitHub — not verified by Anthropic. Install at your own risk."
+
+### Installation from GitHub
+
+```bash
+/plugin install github:owner/repo-name
+```
+
 ## Unofficial Marketplaces
 
 Users may configure additional marketplaces beyond the official one. Plugin Pilot scans ALL configured marketplaces during catalog builds. However:
