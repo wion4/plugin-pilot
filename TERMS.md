@@ -39,7 +39,25 @@ b) Plugin names, logos, and trademarks mentioned in the catalog belong to their 
 
 c) "Claude Code" and "Anthropic" are trademarks of Anthropic, PBC. Plugin Pilot is not affiliated with, endorsed by, or sponsored by Anthropic.
 
-## 6. Third-Party Plugins
+## 6. Token Usage and Costs
+
+a) **Increased token consumption** — Plugin Pilot uses AI agents to analyze your project context, search for plugins, and generate recommendations. This **significantly increases token usage** compared to standard Claude Code operation. By using Plugin Pilot, you acknowledge and accept this increased consumption.
+
+b) **Background agents** — Plugin Pilot may launch background agents (stack-scout, plugin-resolver) that consume tokens independently of your main conversation. These agents perform GitHub API searches, repository analysis, and plugin verification.
+
+c) **Third-party API costs** — Some plugins discovered by Plugin Pilot may require paid third-party API keys (e.g., Gemini API for image generation). Plugin Pilot will note these costs when suggesting such plugins, but you are solely responsible for any charges incurred.
+
+d) **No token guarantees** — Plugin Pilot does not guarantee or limit the number of tokens consumed per session. Token usage depends on project complexity, number of plugins analyzed, and frequency of checks.
+
+e) **Third-party AI services** — Some plugins and stacks discovered by Plugin Pilot integrate with third-party AI models and services (e.g., Google Gemini, OpenAI, Stability AI, Replicate, and others). **Neither Plugin Pilot, Anthropic, nor any other party provides free access to these third-party AI services.** You are solely responsible for:
+   - Obtaining your own API keys and accounts for any third-party AI service
+   - Understanding and accepting the terms of service of each third-party AI provider
+   - Paying all costs associated with third-party AI API usage
+   - Ensuring your use complies with the third-party provider's acceptable use policies
+
+Plugin Pilot will note when a suggested plugin requires third-party AI services, but cannot guarantee the accuracy or completeness of cost estimates.
+
+## 7. Third-Party Plugins
 
 a) **Official marketplace plugins** have undergone Anthropic's review process. Plugin Pilot surfaces these but is not responsible for their content or behavior.
 
@@ -49,7 +67,7 @@ c) **License compatibility** — Plugin Pilot will warn you about plugins with r
 
 d) **Auto-updates** — Plugins may be updated by their authors at any time. Plugin Pilot does not control when or how plugins are updated. An update may introduce breaking changes, new permissions, or altered behavior. Plugin Pilot is not responsible for any consequences of plugin updates.
 
-## 7. Limitation of Liability
+## 8. Limitation of Liability
 
 TO THE MAXIMUM EXTENT PERMITTED BY APPLICABLE LAW:
 
@@ -63,7 +81,7 @@ c) THIS INCLUDES BUT IS NOT LIMITED TO: DATA LOSS, SYSTEM DAMAGE, SECURITY BREAC
    - Unauthorized access to your system through a third-party plugin
    - Plugin conflicts, incompatibilities, or breaking updates
 
-## 8. Indemnification
+## 9. Indemnification
 
 You agree to indemnify, defend, and hold harmless the Plugin authors from and against any claims, damages, losses, liabilities, costs, and expenses (including reasonable attorneys' fees) arising from:
 
@@ -72,7 +90,7 @@ b) Your installation or use of any third-party plugin
 c) Your violation of these Terms
 d) Your violation of any third-party rights or applicable laws
 
-## 9. Data and Privacy
+## 10. Data and Privacy
 
 a) All data is stored locally on your device. See [PRIVACY.md](PRIVACY.md) for details.
 
@@ -80,7 +98,7 @@ b) **Right to deletion** — You may delete all Plugin Pilot data at any time by
 
 c) **GitHub API usage** — Community search uses the GitHub REST API, subject to [GitHub's Terms of Service](https://docs.github.com/en/site-policy/github-terms/github-terms-of-service) and [API rate limits](https://docs.github.com/en/rest/rate-limit). The Plugin uses your existing `gh` CLI authentication and does not create additional GitHub sessions.
 
-## 10. Trust Score
+## 11. Trust Score
 
 The "trust score" is an automated structural assessment and NOT:
 - A security audit
@@ -90,23 +108,23 @@ The "trust score" is an automated structural assessment and NOT:
 
 A high trust score means the plugin has proper file structure, not that it is safe to use.
 
-## 11. Modifications
+## 12. Modifications
 
 The authors reserve the right to modify these Terms at any time. Material changes will be reflected in the "Last updated" date and version number. Continued use of the Plugin after changes constitutes acceptance of the modified Terms.
 
-## 12. Termination
+## 13. Termination
 
 You may stop using the Plugin at any time by uninstalling it. The authors may discontinue the Plugin at any time without notice.
 
-## 13. Governing Law
+## 14. Governing Law
 
 These Terms shall be governed by and construed in accordance with applicable international open-source software conventions. Any disputes shall be resolved through good-faith communication via the project's GitHub issue tracker before pursuing other remedies.
 
-## 14. Severability
+## 15. Severability
 
 If any provision of these Terms is found to be unenforceable, the remaining provisions shall continue in full force and effect.
 
-## 15. Entire Agreement
+## 16. Entire Agreement
 
 These Terms, together with the Privacy Policy and Third-Party Plugin Disclaimer, constitute the entire agreement between you and the Plugin authors regarding the use of the Plugin.
 

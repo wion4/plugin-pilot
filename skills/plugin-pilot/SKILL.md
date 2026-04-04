@@ -115,9 +115,25 @@ Each stack has:
 **Stack detection logic:**
 1. Scan project for `detect_files` matches
 2. Match user message against `triggers`
-3. If a stack matches, check which plugins from the stack are already installed
-4. Suggest missing ones as a bundle: "For Godot game development, I recommend this stack: [list]. Install all?"
-5. If alternatives exist, mention them: "Alternatively, you can use [alt] instead of [x+y]"
+3. If a built-in stack matches, check which plugins are already installed
+4. If no built-in stack matches, delegate to the **stack-scout** agent for GitHub discovery:
+   ```
+   Use the stack-scout agent to find plugin stacks for: [task description]
+   ```
+5. Suggest missing plugins as a bundle: "For Godot game development, I recommend this stack: [list]. Install all?"
+6. If alternatives exist, mention them
+
+**The stack-scout agent** runs in isolation to avoid bloating the main context with API calls and search results. It:
+- Checks built-in stacks first
+- Searches GitHub for multi-plugin repos if needed
+- Analyzes repo structure (skills, agents, MCP tools)
+- Returns a structured recommendation
+
+Also available via script for direct analysis:
+```bash
+python3 ${CLAUDE_PLUGIN_ROOT}/scripts/stack_discovery.py task "godot,gamedev"
+python3 ${CLAUDE_PLUGIN_ROOT}/scripts/stack_discovery.py analyze owner/repo
+```
 
 **When suggesting stacks:**
 - Present as a coherent bundle, not individual plugins

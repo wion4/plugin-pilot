@@ -35,6 +35,23 @@ By using Plugin Pilot's community search and third-party plugin installation fea
 
 Plugin Pilot provides a "trust score" for community plugins based on structural completeness (presence of manifest, license, README, proper directories). This score is **not a security assessment** and should not be interpreted as an endorsement or guarantee of safety. A high trust score only indicates proper plugin structure, not the absence of malicious code.
 
+## Third-Party AI Services
+
+Some plugins and stacks integrate with third-party AI models and services, including but not limited to:
+
+- **Google Gemini** (e.g., Nano Banana for image generation)
+- **OpenAI** (GPT models, DALL-E)
+- **Stability AI** (Stable Diffusion)
+- **Replicate**, **Hugging Face**, and other ML platforms
+
+**Important:**
+- **No free access is provided.** Neither Plugin Pilot, Anthropic, nor any third party provides free access to these services through this plugin. You must obtain and pay for your own API access.
+- **Cost responsibility.** All charges from third-party AI services are your sole responsibility.
+- **Terms compliance.** You must comply with each service's terms of use, acceptable use policies, and content guidelines.
+- **Data handling.** Third-party AI services may process your data according to their own privacy policies, which are outside Plugin Pilot's control.
+
+Plugin Pilot will indicate when a suggested plugin requires third-party AI services and provide approximate cost estimates where known, but these estimates may be inaccurate or outdated.
+
 ## Official Marketplace
 
 Plugins from the official Anthropic marketplace (`claude-plugins-official`) have undergone Anthropic's review process. Plugin Pilot always prioritizes official marketplace plugins over community alternatives.
