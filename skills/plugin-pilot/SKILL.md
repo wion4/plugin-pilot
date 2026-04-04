@@ -98,6 +98,36 @@ Not just plugins — also detect when individual skills within installed plugins
 - If a user's task matches a skill's triggers, inform them about it
 - Skills don't need installation if their parent plugin is already installed — just inform the user about the skill
 
+### 7. Stack Detection
+
+Stacks are pre-configured bundles of plugins for complex workflows. Read them from:
+
+```
+${CLAUDE_PLUGIN_ROOT}/skills/plugin-pilot/stacks.json
+```
+
+Each stack has:
+- `triggers` — keywords that activate the stack
+- `detect_files` — project files that indicate the stack is relevant
+- `plugins` — ordered list with roles and sources (official or github)
+- `alternatives` — alternative plugin combinations for the same goal
+
+**Stack detection logic:**
+1. Scan project for `detect_files` matches
+2. Match user message against `triggers`
+3. If a stack matches, check which plugins from the stack are already installed
+4. Suggest missing ones as a bundle: "For Godot game development, I recommend this stack: [list]. Install all?"
+5. If alternatives exist, mention them: "Alternatively, you can use [alt] instead of [x+y]"
+
+**When suggesting stacks:**
+- Present as a coherent bundle, not individual plugins
+- Explain each plugin's role in the stack
+- Note any costs (e.g., Nano Banana requires Gemini API key)
+- Offer to install all at once or pick individually
+- For community plugins in the stack, verify each one first and show warnings
+
+**Community stacks:** Users and the community can contribute new stacks by submitting PRs to the plugin-pilot repo with additions to `stacks.json`.
+
 ## Plugin-Task Mapping Reference
 
 ### By file type / language

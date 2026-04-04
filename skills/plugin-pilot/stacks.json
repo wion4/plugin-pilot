@@ -1,0 +1,209 @@
+[
+  {
+    "id": "godot-gamedev",
+    "name": "Godot Game Development",
+    "description": "Full AI-powered game development stack for Godot 4: code generation, art/asset creation, and editor integration",
+    "triggers": ["godot", "game development", "gamedev", "gdscript", ".gd", "project.godot", ".tscn", ".tres"],
+    "detect_files": ["project.godot", "*.gd", "*.tscn"],
+    "plugins": [
+      {
+        "name": "godogen",
+        "source": "github:htdt/godogen",
+        "description": "AI pipeline that builds complete Godot 4 projects — architecture, code, art, QA in one context",
+        "role": "orchestrator"
+      },
+      {
+        "name": "nano-banana-2-skill",
+        "source": "github:kingbootoshi/nano-banana-2-skill",
+        "description": "AI image generation (Gemini 3 Pro) for game sprites, textures, and assets",
+        "role": "art-generation",
+        "note": "Requires Gemini API key (~$0.04-0.15 per image)"
+      },
+      {
+        "name": "godot-mcp",
+        "source": "github:ee0pdt/Godot-MCP",
+        "description": "Two-way MCP bridge to Godot editor — create nodes, edit scripts, manage scenes directly",
+        "role": "editor-integration"
+      }
+    ],
+    "alternatives": [
+      {
+        "name": "godot-ai-builder",
+        "source": "github:HubDev-AI/godot-ai-builder",
+        "description": "14 skills + 28 MCP tools for Godot, alternative all-in-one approach",
+        "replaces": ["godogen", "godot-mcp"]
+      }
+    ]
+  },
+  {
+    "id": "fullstack-web",
+    "name": "Full-Stack Web Development",
+    "description": "Frontend design, TypeScript intelligence, browser testing, and deployment",
+    "triggers": ["fullstack", "web app", "webapp", "next.js", "react", "vue", "svelte", "frontend + backend"],
+    "detect_files": ["package.json", "next.config.*", "vite.config.*", "nuxt.config.*"],
+    "plugins": [
+      {
+        "name": "frontend-design",
+        "source": "official:frontend-design",
+        "description": "Production-grade UI design with high visual quality",
+        "role": "design"
+      },
+      {
+        "name": "typescript-lsp",
+        "source": "official:typescript-lsp",
+        "description": "TypeScript/JavaScript code intelligence",
+        "role": "language-server"
+      },
+      {
+        "name": "playwright",
+        "source": "official:playwright",
+        "description": "Browser automation and E2E testing",
+        "role": "testing"
+      },
+      {
+        "name": "context7",
+        "source": "official:context7",
+        "description": "Up-to-date documentation lookup for frameworks",
+        "role": "docs"
+      }
+    ]
+  },
+  {
+    "id": "devops-infra",
+    "name": "DevOps & Infrastructure",
+    "description": "Infrastructure as code, CI/CD, and cloud deployment",
+    "triggers": ["terraform", "infrastructure", "devops", "ci/cd", "deploy", "kubernetes", "docker", "aws", "gcp", "azure"],
+    "detect_files": ["*.tf", "Dockerfile", "docker-compose.yml", ".github/workflows/*.yml", "Jenkinsfile"],
+    "plugins": [
+      {
+        "name": "terraform",
+        "source": "official:terraform",
+        "description": "Terraform IaC automation and interaction",
+        "role": "infrastructure"
+      },
+      {
+        "name": "github",
+        "source": "official:github",
+        "description": "GitHub repository and CI/CD management",
+        "role": "version-control"
+      }
+    ]
+  },
+  {
+    "id": "backend-supabase",
+    "name": "Supabase Backend",
+    "description": "Full Supabase backend development with database, auth, and real-time",
+    "triggers": ["supabase", "postgres", "realtime", "auth", "row level security"],
+    "detect_files": ["supabase/", "supabase/config.toml"],
+    "plugins": [
+      {
+        "name": "supabase",
+        "source": "official:supabase",
+        "description": "Supabase database, auth, storage, and real-time",
+        "role": "backend"
+      },
+      {
+        "name": "typescript-lsp",
+        "source": "official:typescript-lsp",
+        "description": "TypeScript intelligence for Supabase client code",
+        "role": "language-server"
+      }
+    ]
+  },
+  {
+    "id": "backend-firebase",
+    "name": "Firebase Backend",
+    "description": "Firebase backend with Firestore, Cloud Functions, and hosting",
+    "triggers": ["firebase", "firestore", "cloud functions"],
+    "detect_files": ["firebase.json", ".firebaserc"],
+    "plugins": [
+      {
+        "name": "firebase",
+        "source": "official:firebase",
+        "description": "Firebase backend management",
+        "role": "backend"
+      },
+      {
+        "name": "typescript-lsp",
+        "source": "official:typescript-lsp",
+        "description": "TypeScript intelligence for Cloud Functions",
+        "role": "language-server"
+      }
+    ]
+  },
+  {
+    "id": "code-quality",
+    "name": "Code Quality & Review",
+    "description": "Comprehensive code review, PR management, and quality tooling",
+    "triggers": ["code review", "pull request", "PR review", "code quality", "refactor"],
+    "detect_files": [],
+    "plugins": [
+      {
+        "name": "code-review",
+        "source": "official:code-review",
+        "description": "Automated code review with specialized agents",
+        "role": "review"
+      },
+      {
+        "name": "pr-review-toolkit",
+        "source": "official:pr-review-toolkit",
+        "description": "PR review agents for tests, errors, types, quality",
+        "role": "pr-review"
+      },
+      {
+        "name": "code-simplifier",
+        "source": "official:code-simplifier",
+        "description": "Simplify and refine code for clarity",
+        "role": "refactoring"
+      },
+      {
+        "name": "github",
+        "source": "official:github",
+        "description": "GitHub PR and issue management",
+        "role": "integration"
+      }
+    ]
+  },
+  {
+    "id": "laravel-fullstack",
+    "name": "Laravel Full-Stack",
+    "description": "Laravel PHP development with language server and framework tools",
+    "triggers": ["laravel", "artisan", "eloquent", "blade", "php framework"],
+    "detect_files": ["artisan", "composer.json", "app/Http/Kernel.php"],
+    "plugins": [
+      {
+        "name": "laravel-boost",
+        "source": "official:laravel-boost",
+        "description": "Laravel-specific development assistance",
+        "role": "framework"
+      },
+      {
+        "name": "php-lsp",
+        "source": "official:php-lsp",
+        "description": "PHP code intelligence via Intelephense",
+        "role": "language-server"
+      }
+    ]
+  },
+  {
+    "id": "team-collab",
+    "name": "Team Collaboration",
+    "description": "Communication and project management integrations",
+    "triggers": ["team", "slack message", "discord bot", "telegram bot", "project management", "linear ticket", "asana task"],
+    "detect_files": [],
+    "plugins": [
+      {
+        "name": "slack",
+        "source": "official:slack",
+        "description": "Slack workspace integration",
+        "role": "communication"
+      },
+      {
+        "name": "linear",
+        "source": "official:linear",
+        "description": "Linear issue tracking",
+        "role": "project-management"
+      }
+    ]
+  }
+]
