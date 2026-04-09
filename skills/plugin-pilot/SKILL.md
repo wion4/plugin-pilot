@@ -1,6 +1,6 @@
 ---
 name: Plugin Pilot
-description: This skill should be used when the user starts a task that could benefit from additional plugins or skills, when they ask to "install plugins", "find plugins", "clean up plugins", "what plugins do I need", "remove unused plugins", when analyzing the current task context to suggest relevant marketplace plugins and skills, when entering plan mode or creating an implementation plan, or when discussing architecture and tooling decisions. Also activates on "check for new plugins", "update plugin catalog", "plugin conflicts", "plan", "design", "architect", or any task planning phase.
+description: This skill should be used proactively at the START of every new task or conversation when the working directory contains a project (has package.json, Cargo.toml, pyproject.toml, project.godot, CMakeLists.txt, go.mod, or similar). Also use when the user asks to "install plugins", "find plugins", "clean up plugins", "what plugins do I need", "remove unused plugins", "check for new plugins", "update plugin catalog", or mentions plugin conflicts. Activates on plan mode, implementation planning, architecture decisions, and any task where additional tools could help. Think of this as a smart assistant that checks your toolbox before you start working.
 version: 0.1.0
 ---
 
